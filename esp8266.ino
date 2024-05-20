@@ -5,6 +5,7 @@ const char* NETWORK_NAME = "It & Robotics";
 const char* PASSWORD = "1116equj5";
 const char* ON_SIGNAL_VALUE = "1";
 const char* OFF_SIGNAL_VALUE = "0";
+const String CLIENT_EMAIL = " "; 
 unsigned BAUD_RATE = 9600;
 short PORT = 80;
 
@@ -29,17 +30,24 @@ public:
     }
 
     void setupRoutes() {
-        _server.on("/", [this]() {
-            _server.send(200, "text/plain", "Connected");
+        _server.on("/", HTTP_POST, [this]() {
+          String payload = _server.arg("plain");
+          if (payload != CLIENT_EMAIL) {
+             _server.send(403, "text/plain", "You do not have permission to open this locker.");
+             Serial.println("Resource Forbidden: 403");
+             Serial.println(payload);
+             return;
+          } 
+          _server.send(200, "text/plain", "Connected");
         });
 
-        _server.on("/on_signal", [this]() {
+        _server.on("/on_signal", HTTP_GET, [this]() {
             digitalWrite(BUILTIN_LED, 0);
             _server.send(200, "text/plain", ON_SIGNAL_VALUE);
             Serial.println("Bit Status: 1");
         });
 
-        _server.on("/off_signal", [this]() {
+        _server.on("/off_signal", HTTP_GET, [this]() {
             digitalWrite(BUILTIN_LED, 1);
             _server.send(200, "text/plain", OFF_SIGNAL_VALUE);
             Serial.println("Bit Status: 0");
@@ -66,3 +74,5 @@ void setup() {
 void loop() {
     sm.requestHandler();
 }
+
+
