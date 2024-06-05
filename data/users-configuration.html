@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard | Users</title>
+    </head>
+    <body>
+        <nav>
+            <a href="/network-configuration">Network Configurations</a>
+        </nav>
+        <h1>Dashboard</h1>
+        <hr />
+        <h2>Add Users</h2>
+        <form
+            id="form-id"
+            action="/users-configuration"
+            method="post">
+            <!-- Input fields.... -->
+            <input
+                type="email"
+                name="email1"
+                class="email-fields"
+                placeholder="Email One" />
+
+            <input
+                type="email"
+                name="email2"
+                class="email-fields"
+                placeholder="Email Two" />
+
+            <input
+                type="email"
+                name="email3"
+                class="email-fields"
+                placeholder="Email Three" />
+
+            <!-- buttons . . . . -->
+            <input
+                id="save-btn"
+                type="button"
+                value="Save" />
+
+            <input
+                id="update-btn"
+                type="button"
+                value="Update" />
+
+            <input
+                id="reset-btn"
+                type="button"
+                value="Reset" />
+
+            <input
+                id="confirm-btn"
+                type="submit"
+                disabled="true"
+                value="Confirm & Reboot" />
+        </form>
+        <hr />
+        <script>
+            const emailInput = document.querySelectorAll(".email-fields");
+            const saveButton = document.getElementById("save-btn");
+            const updateButton = document.getElementById("update-btn");
+            const confirmButton = document.getElementById("confirm-btn");
+            const resetButton = document.getElementById("reset-btn");
+
+            emailInput.forEach((element, index) => {
+                element.value = localStorage.getItem(index + 1);
+                if (element.value) {
+                    element.disabled = true;
+                    confirmButton.disabled = false;
+                }
+            });
+
+            confirmButton.addEventListener("click", (e) => {
+                emailInput.forEach((element, index) => {
+                    if (element.value) {
+                        confirmButton.disabled = false;
+                    }
+                });
+            });
+
+            updateButton.addEventListener("click", (e) => {
+                emailInput.forEach((element, index) => (element.disabled = false));
+            });
+
+            saveButton.addEventListener("click", (e) => {
+                emailInput.forEach((element, index) => {
+                    if (element.value !== "") {
+                        element.disabled = true;
+                        localStorage.setItem(index + 1, element.value);
+                        confirmButton.disabled = false;
+                    } else {
+                        localStorage.removeItem(index + 1);
+                    }
+                });
+            });
+
+            resetButton.addEventListener("click", (e) => {
+                localStorage.clear();
+                emailInput.forEach((element, index) => {
+                    element.disabled = false;
+                    element.value = "";
+                    confirmButton.disabled = true;
+                });
+            });
+        </script>
+    </body>
+</html>
