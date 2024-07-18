@@ -4,37 +4,49 @@
 #include <Arduino.h>
 #include <LittleFS.h>
 
-WebServer webServer;
+WebServer server;
 FirebaseOperations firebase;
+
+void initializeRelays()
+{
+  for (const auto &i : _GPIO_PINS_)
+  {
+    pinMode(i.second, OUTPUT);
+    digitalWrite(i.second, HIGH); // inverted
+  }
+}
 
 void setup()
 {
   Serial.begin(BAUD_RATE);
-  pinMode(BUILTIN_LED, OUTPUT);
-  digitalWrite(BUILTIN_LED, LOW);
+  initializeRelays();
 
   if (!LittleFS.begin())
   {
-    Serial.println("Failed to mount LittleFS!");
+    Serial.println("LittleFS Failed!");
+    Serial.println("Restarting . . . ");
+    ESP.restart();
     return;
   }
 
-  webServer.init();
-  webServer.establishSTAConnections();
-  webServer.setupRoutes();
+  // The order of the below 3 methods
+  // should not be changed.
+  // Otherwise the code will throw
+  // runtime errors . . .
+  // because the STA mode was setup in
+  // [setupSTAMode] method
+  // and for settting the WiFi mode
+  // it should be at the beginning...
+  //
+  // https://github.com/espressif/arduino-esp32/issues/8661#issuecomment-1731752332
+  server.setupSTAMode();
+  server.start();
+  server.setupRoutes();
 
-  if (webServer.isConnectedToWiFi())
+  if (server.isConnectedToWiFi())
   {
     firebase.configure();
   }
 }
 
-void loop()
-{
-  webServer.requestHandler();
-
-  if (webServer.isConnectedToWiFi())
-  {
-    firebase.listen();
-  }
-}
+void loop() {}

@@ -7,14 +7,14 @@ class FirebaseOperations
 {
 public:
     FirebaseOperations()
-        : _isAccessBlocked(false) {}
+        : _isAuthorized(true) {}
 
-    bool isAccessBlocked();
+    bool isAuthorized();
     void configure();
     void listen();
 
 private:
-    bool _isAccessBlocked;
+    bool _isAuthorized;
     FirebaseData _data;
     FirebaseAuth _auth;
     FirebaseConfig _config;
