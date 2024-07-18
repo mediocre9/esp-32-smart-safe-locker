@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Lock</title>
+    <style>
+        body {
+            font-family: "Montserrat", sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: #fff;
+            color: #333;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h1 {
+            font-size: 1.5em;
+            margin: 0;
+            padding: 0;
+        }
+
+        header h2 {
+            font-size: 1.2em;
+            margin: 5px 0 0;
+            color: #bbb;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            margin: 20px auto;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            /* Reduced margin */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>Smart Lock</h1>
+    </nav>
+
+    <main>
+        <form action="/login" method="post">
+            <h2>Login</h2>
+            <input type="text" placeholder="Username" name="username">
+            <br><br>
+            <input type="password" placeholder="Password" name="password">
+            <br><br>
+            <input type="submit" value="Login">
+        </form>
+    </main>
+
+    <footer>&copy; IT & Robotics Society - City University of Science and Information Technology, Peshawar</footer>
+</body>
+
+</html>

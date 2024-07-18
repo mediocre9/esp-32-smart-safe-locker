@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Lock</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: #fff;
+            color: #333;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h1 {
+            font-size: 1.5em;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li:last-child {
+            margin-right: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #f0f0f5;
+        }
+
+        header {
+            background-color: #fff;
+            color: #333;
+            padding: 20px 0;
+            text-align: left;
+            padding-left: 70px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>Smart Lock</h1>
+        <ul>
+            <li><a href="/device-wifi">Configure Device Wi-Fi</a></li>
+            <li><a href="/home-wifi">Connect Home Wi-Fi</a></li>
+            <li><a href="/change-password">Change Password</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="form-container">
+            <h2>Add Users Email</h2>
+            <form action="/users" method="post">
+                <input type="text" name="email_1" placeholder="Email One" class="email-fields">
+                <input type="text" name="email_2" placeholder="Email Two" class="email-fields">
+                <input type="text" name="email_3" placeholder="Email Three" class="email-fields">
+                <input type="text" name="email_4" placeholder="Email Four" class="email-fields">
+                <input type="text" name="email_5" placeholder="Email Five" class="email-fields">
+                <input type="text" name="email_6" placeholder="Email Six" class="email-fields">
+                <input type="text" name="email_7" placeholder="Email Seven" class="email-fields">
+                <input type="text" name="email_8" placeholder="Email Eight" class="email-fields">
+                <input type="text" name="email_9" placeholder="Email Nine" class="email-fields">
+                <input type="text" name="email_10" placeholder="Email Ten" class="email-fields">
+                <input type="text" name="email_11" placeholder="Email Eleven" class="email-fields">
+                <input type="text" name="email_12" placeholder="Email Twelve" class="email-fields">
+                <br><br>
+                <input type="submit" value="Save & Reboot">
+            </form>
+        </div>
+    </main>
+
+    <footer>&copy; IT & Robotics Society - City University of Science and Information Technology, Peshawar</footer>
+    <script>
+        const emailInput = document.querySelectorAll(".email-fields");
+        const confirmButton = document.getElementById("confirm-btn");
+
+        emailInput.forEach((element, index) => {
+            element.value = localStorage.getItem(index + 1);
+        });
+
+        confirmButton.addEventListener("click", (e) => {
+            emailInput.forEach((element, index) => {
+                if (element.value !== "") {
+                    localStorage.setItem(index + 1, element.value);
+                } else {
+                    localStorage.removeItem(index + 1);
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
