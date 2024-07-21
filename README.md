@@ -56,12 +56,19 @@ To serve web pages from the ESP32:
 -   #### Smart Link
     Users have to download the Smart Link app and sign in with their Google account. Then Admins need to add the email that the user used to create their Smart Link account in Esp32 for authorization. Initially, users must connect to the Smart Lock network. Each time they want to open their locker, they must authenticate themselves with their phone's fingerprint. If successful, their respective locker will be unlocked.
 
+### Web Interface Previews (Admin):
+<img src="previews/1.png" width="80%">
+<img src="previews/2.png" width="80%">
+<img src="previews/3.png" width="80%">
+<img src="previews/4.png" width="80%">
+<img src="previews/5.png" width="80%">
+
 ### <ins>Note:</ins>
 
 -   Admin (Organizations, homeowners or individuals) can manage smart lock access by authorizing users by adding their email. The Firebase feature allows developers to block entire organizations, preventing both users within those organizations from accessing their lockers. Admins can still manage local ESP32 settings, such as changing ESP32 hotspot SSIDs, login passwords etc.
 
 -   If admin enters incorrect home wifi details, the authorised users won't be able to access the locker system.
-
+  
 ### Libraries:
 
 -   LittleFS
