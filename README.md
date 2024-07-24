@@ -7,8 +7,6 @@
 -   **Remote Setup and Control:** Configure the locker via web pages accessed through the ESP32 hotspot.
 -   **Wi-Fi Configuration:** Enter home Wi-Fi details through the web interface.
 -   **User Authorization:** Add authorized user emails for locker access.
--   **Performance:** Uses [ESP8266WebServer](https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WebServer) for efficient handling.
--   **Internet Required:** Needs an internet connection for full functionality.
 -   **Security:** Secure login for web interface access.
 -   **Customizable Login and Hotspot:** Change the web interface login password and ESP32 hotspot SSID and password.
 -   **Firebase Integration:** Allows developers to block entire organizations, preventing users within those organizations from accessing their lockers.
@@ -49,9 +47,8 @@ To serve web pages from the ESP32:
 -   #### Adding Authorized Users
 
 1. Reconnect to the hotspot again after the restart.
-2. Open a web browser and go to `192.168.4.1`.
-3. Login and enter user emails.
-4. Save and Reboot.
+2. Login and enter user emails.
+3. Save and Reboot.
 
 -   #### Smart Link
     Users have to download the Smart Link app and sign in with their Google account. Then Admins need to add the email that the user used to create their Smart Link account in Esp32 for authorization. Initially, users must connect to the Smart Lock network. Each time they want to open their locker, they must authenticate themselves with their phone's fingerprint. If successful, their respective locker will be unlocked.
@@ -65,7 +62,7 @@ To serve web pages from the ESP32:
 
 ### <ins>Note:</ins>
 
--   Admin (Organizations, homeowners or individuals) can manage smart lock access by authorizing users by adding their email. The Firebase feature allows developers to block entire organizations, preventing both users within those organizations from accessing their lockers. Admins can still manage local ESP32 settings, such as changing ESP32 hotspot SSIDs, login passwords etc.
+-   Admin (Organizations, homeowners or individuals) can manage smart lock access by authorizing users by adding their email. The Firebase feature allows developers to block entire organizations, preventing users within those organizations from accessing their lockers. Admins can still manage local ESP32 settings, such as changing ESP32 hotspot SSIDs, login passwords etc.
 
 -   If admin enters incorrect home wifi details, the authorised users won't be able to access the locker system.
   
@@ -73,6 +70,6 @@ To serve web pages from the ESP32:
 
 -   LittleFS
 -   [Firebase_ESP_Client](https://github.com/mobizt/Firebase-ESP-Client)
--   [ESP8266WebServer](https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WebServer)
+-   [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
 -   [UUID](https://github.com/RobTillaart/UUID)
 -   [arduino-littlefs-upload](https://github.com/earlephilhower/arduino-littlefs-upload)
