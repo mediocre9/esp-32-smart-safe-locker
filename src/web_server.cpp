@@ -12,6 +12,14 @@ FirebaseOperations WebServer::firebase;
 
 TaskHandle_t firebaseTask = NULL;
 
+void lockAllLockers()
+{
+    for (const auto &i : _GPIO_PINS_)
+    {
+        digitalWrite(i.second, LOW);
+    }
+}
+
 void firebaseListenerTask(void *parameter)
 {
     for (;;)
@@ -19,8 +27,9 @@ void firebaseListenerTask(void *parameter)
         if (WiFi.status() == WL_CONNECTED)
         {
             WebServer::firebase.listen();
+            lockAllLockers();
         }
-        vTaskDelay(pdMS_TO_TICKS(10000));
+        vTaskDelay(pdMS_TO_TICKS(20000)); // 20 secs
     }
 }
 
@@ -423,17 +432,14 @@ void WebServer::lockController_POST(AsyncWebServerRequest *request, uint8_t *dat
 #if _PROD_MODE_
     if (!isConnectedToWiFi())
     {
-        request->send(403, "text/plain", "Locker device is offline. Please contact the administrator to configure the internet connection.");
+        request->send(403, "text/plain", "Locker is offline. Please ask the administrator to configure the internet connection.");
         return;
     }
 
     if (!firebase.isAuthorized())
     {
-        for (const auto &i : _GPIO_PINS_)
-        {
-            digitalWrite(i.second, HIGH); // inverted
-        }
-        request->send(403, "text/plain", "Access to all lockers has been restricted. Please contact support for further assistance.");
+        lockAllLockers();
+        request->send(403, "text/plain", "Access to all lockers is restricted. Please contact CUSIT Makerspace R&D Lab for assistance.");
         return;
     }
 #endif
@@ -459,29 +465,15 @@ void WebServer::lockController_POST(AsyncWebServerRequest *request, uint8_t *dat
         }
     }
 
-    if (request->url() == "/lock")
-    {
-        for (const auto &i : users)
-        {
-            if (email == i.second)
-            {
-                digitalWrite(i.first.toInt(), HIGH); // inverted
-                email.clear();
-                request->send(200, "text/plain", "Locker " + String(i.first) + " has been locked!");
-                return;
-            }
-        }
-    }
-
     if (request->url() == "/unlock")
     {
         for (const auto &i : users)
         {
             if (email == i.second)
             {
-                digitalWrite(i.first.toInt(), LOW);
                 email.clear();
-                request->send(200, "text/plain", "Locker " + String(i.first) + " Unlocked!");
+                digitalWrite(i.first.toInt(), HIGH);
+                request->send(200, "text/plain", "Locker " + String(i.first) + " is now unlocked!");
                 return;
             }
         }
