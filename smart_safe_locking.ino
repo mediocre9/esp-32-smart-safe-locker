@@ -12,7 +12,7 @@ void initializeRelays()
   for (const auto &i : _GPIO_PINS_)
   {
     pinMode(i.second, OUTPUT);
-    digitalWrite(i.second, HIGH); // inverted
+    digitalWrite(i.second, LOW);
   }
 }
 
