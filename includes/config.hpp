@@ -5,23 +5,23 @@
 #include <map>
 
 // Cloud Configuration . . .
-#define FIREBASE_WEB_API_KEY "-----Your Firebase API key-----"
-#define FIREBASE_RTDB_REFERENCE_URL "-----Your Firebase RTDB Reference URL-----"
-#define NODEMCU_CLOUD_EMAIL "-----ESP32 Firebase Auth Email-----"
-#define NODEMCU_CLOUD_PWD "-----ESP32 Firebase Auth Password-----"
-#define ORGANIZATION "------any organization------"
+#define FIREBASE_WEB_API_KEY "AIzaSyAr9p9qv7zWawILIQ4TV69Al99wWTj36xg"
+#define FIREBASE_RTDB_REFERENCE_URL "https://smart-link-3680c-default-rtdb.asia-southeast1.firebasedatabase.app/"
+#define ESP_FIREBASE_AUTH_EMAIL "esp.dev@iot.com"
+#define ESP_FIREBASE_AUTH_PWD "12345678"
+#define ORGANIZATION "cusit"
 
-// Macro Flags For resgistering and signing the nodemcu on firebase cloud . . .
-#define CREATE_NODEMCU_ACCOUNT false
-#define SIGNIN_NODEMCU_ACCOUNT !CREATE_NODEMCU_ACCOUNT
+// Macro Flags For resgistering and signing the esp on firebase cloud . . .
+#define REGISTER_ESP_ON_FIREBASE false
+#define LOGIN_ESP_ON_FIREBASE !REGISTER_ESP_ON_FIREBASE
 
-// Soft AP Network Configuration . . . .
-#define NODEMCU_SSID "SafeLock"
-#define NODEMCU_PWD "1Orion_const"
+// Soft AP Network Configuration (defaults) . . . .
+#define ESP_SSID "SafeLock"
+#define ESP_PWD "1Orion_const"
 
-// For authentication . . .
-#define NODEMCU_AUTH_USERNAME "admin"
-#define NODEMCU_AUTH_PWD "loop11147"
+// For local web interface auth (defaults). . .
+#define ESP_LOCAL_WEB_AUTH_USERNAME "admin"
+#define ESP_LOCAL_WEB_AUTH_PWD "loop11147"
 
 // Configuration Files . . ...
 #define HOME_WIFI_CFG_FILE "/home-wifi.cfg"
