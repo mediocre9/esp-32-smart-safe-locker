@@ -27,7 +27,7 @@
 
 ### 2. Firmware Configuration
 
-To register the ESP32 with Firebase authentication, set `REGISTER_ESP_ON_FIREBASE` to `true` in [config.hpp](https://github.com/mediocre9/nodemcu-esp8266/blob/main/includes/config.hpp). Then, compile and run the code to complete the registration with Firebase Auth. Afterward, set `REGISTER_ESP_ON_FIREBASE` back to `false` so that it performs a login operation instead of registering the app again.
+To register the ESP32 with Firebase authentication, set `CREATE_NODEMCU_ACCOUNT` to `true` in [config.hpp](https://github.com/mediocre9/nodemcu-esp8266/blob/main/includes/config.hpp). Compile and run the ESP32 firmware to complete registration. Afterward, set `CREATE_NODEMCU_ACCOUNT` back to `false`.
 
 ### 3. Uploading HTML Files
 
@@ -54,7 +54,6 @@ To serve web pages from the ESP32:
     Users have to download the Smart Link app and sign in with their Google account. Then Admins need to add the email that the user used to create their Smart Link account in Esp32 for authorization. Initially, users must connect to the Smart Lock network. Each time they want to open their locker, they must authenticate themselves with their phone's fingerprint. If successful, their respective locker will be unlocked.
 
 ### Web Interface Previews (Admin):
-
 <img src="previews/1.png" width="80%">
 <img src="previews/2.png" width="80%">
 <img src="previews/3.png" width="80%">
@@ -66,7 +65,7 @@ To serve web pages from the ESP32:
 -   Admin (Organizations, homeowners or individuals) can manage smart lock access by authorizing users by adding their email. The Firebase feature allows developers to block entire organizations, preventing users within those organizations from accessing their lockers. Admins can still manage local ESP32 settings, such as changing ESP32 hotspot SSIDs, login passwords etc.
 
 -   If admin enters incorrect home wifi details, the authorised users won't be able to access the locker system.
-
+  
 ### Libraries:
 
 -   LittleFS
