@@ -20,6 +20,11 @@ void lockAllLockers()
     }
 }
 
+/**
+ * Polling every 20 secs to check the
+ * status of firmware organizational
+ * revocation status.
+ */
 void firebaseListenerTask(void *parameter)
 {
     for (;;)
@@ -74,8 +79,8 @@ void WebServer::setupSTAMode()
     auto deviceSsid = deviceConfig.find("device_ssid");
     auto devicePwd = deviceConfig.find("device_pwd");
 
-    String deviceCurrentSsid = NODEMCU_SSID;
-    String deviceCurrentPwd = NODEMCU_PWD;
+    String deviceCurrentSsid = ESP_SSID;
+    String deviceCurrentPwd = ESP_PWD;
 
     if (deviceSsid != deviceConfig.end() && devicePwd != deviceConfig.end())
     {
@@ -214,7 +219,7 @@ void WebServer::loginHandler_POST(AsyncWebServerRequest *request)
     username.trim();
     password.trim();
 
-    String currentPassword = NODEMCU_AUTH_PWD;
+    String currentPassword = ESP_LOCAL_WEB_AUTH_PWD;
     Cfg loginPassword = database.read(LOGIN_CFG_FILE);
 
     auto p = loginPassword.find("password");
@@ -229,7 +234,7 @@ void WebServer::loginHandler_POST(AsyncWebServerRequest *request)
         }
     }
 
-    if (username == NODEMCU_AUTH_USERNAME && password == currentPassword)
+    if (username == ESP_LOCAL_WEB_AUTH_USERNAME && password == currentPassword)
     {
         AsyncWebServerResponse *response = request->beginResponse(302, "text/plain", "");
         response->addHeader("Location", "/home-wifi");

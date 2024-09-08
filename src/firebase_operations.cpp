@@ -11,13 +11,13 @@ void FirebaseOperations::configure()
   _config.api_key = FIREBASE_WEB_API_KEY;
   _config.database_url = FIREBASE_RTDB_REFERENCE_URL;
 
-#if SIGNIN_NODEMCU_ACCOUNT
-  _auth.user.email = NODEMCU_CLOUD_EMAIL;
-  _auth.user.password = NODEMCU_CLOUD_PWD;
+#if LOGIN_ESP_ON_FIREBASE
+  _auth.user.email = ESP_FIREBASE_AUTH_EMAIL;
+  _auth.user.password = ESP_FIREBASE_AUTH_PWD;
 #endif
 
-#if CREATE_NODEMCU_ACCOUNT
-  if (Firebase.signUp(&_config, &_auth, NODEMCU_CLOUD_EMAIL, NODEMCU_CLOUD_PWD))
+#if REGISTER_ESP_ON_FIREBASE
+  if (Firebase.signUp(&_config, &_auth, ESP_FIREBASE_AUTH_EMAIL, ESP_FIREBASE_AUTH_PWD))
   {
     Serial.print("Account registered successfully!");
   }
@@ -31,7 +31,7 @@ void FirebaseOperations::configure()
   Firebase.begin(&_config, &_auth);
   Firebase.reconnectWiFi(true);
 
-#if SIGNIN_NODEMCU_ACCOUNT
+#if LOGIN_ESP_ON_FIREBASE
   while ((_auth.token.uid) == "")
   {
     Serial.print('.');
