@@ -24,8 +24,8 @@
 #define ESP_LOCAL_WEB_AUTH_PWD "<set-password-here>"
 
 // Configuration Files . . ...
-#define HOME_WIFI_CFG_FILE "/home-wifi.cfg"
-#define DEVICE_WIFI_CFG_FILE "/device-wifi.cfg"
+#define HOME_WIFI_CFG_FILE "/home_wifi.cfg"
+#define DEVICE_WIFI_CFG_FILE "/device_wifi.cfg"
 #define LOGIN_CFG_FILE "/login.cfg"
 #define USERS_CFG_FILE "/users.cfg"
 #define BAUD_RATE 9600
