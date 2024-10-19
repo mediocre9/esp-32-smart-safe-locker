@@ -32,6 +32,11 @@ void firebaseListenerTask(void *parameter)
         if (WiFi.status() == WL_CONNECTED)
         {
             WebServer::firebase.listen();
+            String authorizationStatus = WebServer::firebase.isAuthorized()
+                                             ? "Authorized " + String(ORGANIZATION)
+                                             : "Unauthorized " + String(ORGANIZATION);
+            Serial.println(authorizationStatus);
+            Serial.println("Polled . . .");
             lockAllLockers();
         }
         vTaskDelay(pdMS_TO_TICKS(20000)); // 20 secs
@@ -153,7 +158,12 @@ void WebServer::sendHTML(AsyncWebServerRequest *request, const String &filename)
         request->send(404, "text/plain", "File not found");
         return;
     }
-    request->send(file, filename, "text/html");
+
+    Serial.println("File size: " + String(file.size()));
+
+    AsyncWebServerResponse *response = request->beginResponse(file, filename, "text/html");
+    response->addHeader("Content-Length", String(file.size()));
+    request->send(response);
     file.close();
 }
 
@@ -294,7 +304,7 @@ void WebServer::usersHandler_POST(AsyncWebServerRequest *request)
 
     Serial.println("Users have been saved!");
     sendHTML(request, "/restart.html");
-    request->send(204, "text/plain", "");
+    WiFi.disconnect(true);
     ESP.restart();
 }
 
@@ -340,7 +350,7 @@ void WebServer::deviceWifiHandler_POST(AsyncWebServerRequest *request)
 
     Serial.println("Device Wifi configuration saved successfully");
     sendHTML(request, "/restart.html");
-    request->send(204, "text/plain", "");
+    WiFi.disconnect(true);
     ESP.restart();
 }
 
@@ -386,7 +396,7 @@ void WebServer::homeWifiHandler_POST(AsyncWebServerRequest *request)
 
     Serial.println("Home Wifi configuration saved successfully");
     sendHTML(request, "/restart.html");
-    request->send(204, "text/plain", "");
+    WiFi.disconnect(true);
     ESP.restart();
 }
 
@@ -428,7 +438,7 @@ void WebServer::changePasswordHandler_POST(AsyncWebServerRequest *request)
 
     Serial.println("Login password changed saved successfully");
     sendHTML(request, "/restart.html");
-    request->send(204, "text/plain", "");
+    WiFi.disconnect(true);
     ESP.restart();
 }
 

@@ -46,8 +46,7 @@ void FirebaseOperations::listen()
   _isAuthorized = _data.boolData();
 }
 
-bool FirebaseOperations::isAuthorized()
+int FirebaseOperations::isAuthorized()
 {
-  Serial.println(_isAuthorized ? "Authorized" : "Unauthorized");
   return _isAuthorized;
 }
