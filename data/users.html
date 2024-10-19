@@ -31,14 +31,13 @@
         nav h1 {
             font-size: 1.5em;
             margin: 0;
-            padding: 0;
         }
 
         nav ul {
             list-style-type: none;
+            display: flex;
             margin: 0;
             padding: 0;
-            display: flex;
         }
 
         nav ul li {
@@ -61,20 +60,6 @@
             background-color: #f0f0f5;
         }
 
-        header {
-            background-color: #fff;
-            color: #333;
-            padding: 20px 0;
-            text-align: left;
-            padding-left: 70px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            margin: 0;
-        }
-
         main {
             flex: 1;
             padding: 20px;
@@ -93,8 +78,7 @@
             text-align: center;
         }
 
-        input[type="text"],
-        input[type="password"] {
+        input[type="text"] {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -119,10 +103,6 @@
             background-color: #555;
         }
 
-        p {
-            margin-bottom: 10px;
-        }
-
         footer {
             background-color: #333;
             color: white;
@@ -145,36 +125,37 @@
 
     <main>
         <div class="form-container">
-            <h2>Add Users Email</h2>
+            <h2>Add User Email Address</h2>
             <form action="/users" method="post">
-                <input type="text" name="email_1" placeholder="Email One" class="email-fields">
-                <input type="text" name="email_2" placeholder="Email Two" class="email-fields">
-                <input type="text" name="email_3" placeholder="Email Three" class="email-fields">
-                <input type="text" name="email_4" placeholder="Email Four" class="email-fields">
-                <input type="text" name="email_5" placeholder="Email Five" class="email-fields">
-                <input type="text" name="email_6" placeholder="Email Six" class="email-fields">
-                <input type="text" name="email_7" placeholder="Email Seven" class="email-fields">
-                <input type="text" name="email_8" placeholder="Email Eight" class="email-fields">
-                <input type="text" name="email_9" placeholder="Email Nine" class="email-fields">
-                <input type="text" name="email_10" placeholder="Email Ten" class="email-fields">
-                <input type="text" name="email_11" placeholder="Email Eleven" class="email-fields">
-                <input type="text" name="email_12" placeholder="Email Twelve" class="email-fields">
+                <input type="text" name="email_1" placeholder="Locker Number 4" class="email-fields">
+                <input type="text" name="email_2" placeholder="Locker Number 13" class="email-fields">
+                <input type="text" name="email_3" placeholder="Locker Number 18" class="email-fields">
+                <input type="text" name="email_4" placeholder="Locker Number 19" class="email-fields">
+                <input type="text" name="email_5" placeholder="Locker Number 21" class="email-fields">
+                <input type="text" name="email_6" placeholder="Locker Number 22" class="email-fields">
+                <input type="text" name="email_7" placeholder="Locker Number 23" class="email-fields">
+                <input type="text" name="email_8" placeholder="Locker Number 25" class="email-fields">
+                <input type="text" name="email_9" placeholder="Locker Number 26" class="email-fields">
+                <input type="text" name="email_10" placeholder="Locker Number 27" class="email-fields">
+                <input type="text" name="email_11" placeholder="Locker Number 32" class="email-fields">
+                <input type="text" name="email_12" placeholder="Locker Number 33" class="email-fields">
                 <br><br>
-                <input type="submit" value="Save & Reboot">
+                <input id="save-btn" type="submit" value="Save & Reboot">
             </form>
         </div>
     </main>
 
     <footer>&copy; CUSIT Makerspace R&D Lab - City University of Science and Information Technology, Peshawar</footer>
+
     <script>
         const emailInput = document.querySelectorAll(".email-fields");
-        const confirmButton = document.getElementById("confirm-btn");
+        const saveButton = document.getElementById("save-btn");
 
         emailInput.forEach((element, index) => {
             element.value = localStorage.getItem(index + 1);
         });
 
-        confirmButton.addEventListener("click", (e) => {
+        saveButton.addEventListener("click", (e) => {
             emailInput.forEach((element, index) => {
                 if (element.value !== "") {
                     localStorage.setItem(index + 1, element.value);
@@ -184,7 +165,6 @@
             });
         });
     </script>
-
 </body>
 
 </html>

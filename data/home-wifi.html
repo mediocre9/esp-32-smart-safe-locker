@@ -146,8 +146,9 @@
     <main>
         <div class="form-container">
             <h2>Home WiFi Configuration</h2>
-            <p>Configure the smart lock to connect to the internet.</p>
-            <p>Please make sure you enter the correct SSID and password of your home WiFi network.</p>
+            <div style="font-size: smaller; text-align: left; border-radius: 5px; padding: 12px; border: 1px solid #FDDA6A; color: #664d03 ; background-color: #fff3cd;">
+                <p>Please make sure you enter the correct <b>SSID</b> and <b>Password</b> of your home WiFi network. Otherwise the users would not be able to unlock the lockers.</p>
+            </div>
             <form action="/home-wifi" method="post">
                 <input type="text" id="ssid" placeholder="SSID" class="email-fields" name="home_ssid" />
                 <br><br>
