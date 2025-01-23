@@ -8,6 +8,25 @@
 #include <Arduino.h>
 #include <LittleFS.h>
 
+// JWT Configurations . . . .
+#define HEADER_SIZE 50
+#define PAYLOAD_SIZE 256
+#define SIGNATURE_SIZE 50
+#define OUTPUT_SIZE 400
+
+char header[HEADER_SIZE];
+char payload[PAYLOAD_SIZE];
+char signature[SIGNATURE_SIZE];
+char out[OUTPUT_SIZE];
+char key[] = "secret";
+
+CustomJWT jwt(
+    key,
+    header, sizeof(header),
+    payload, sizeof(payload),
+    signature, sizeof(signature),
+    out, sizeof(out));
+
 AsyncWebServer WebServer::server(80);
 bool WebServer::isInternetConnected = false;
 User WebServer::users;
@@ -586,102 +605,3 @@ void WebServer::lockController_GET(AsyncWebServerRequest *request)
 
     request->send(403, "text/plain", "Access Denied. Please contact the admin to gain access.");
 }
-
-// #define HEADER_SIZE 50
-// #define PAYLOAD_SIZE 256
-// #define SIGNATURE_SIZE 50
-// #define OUTPUT_SIZE 400
-
-// char header[HEADER_SIZE];
-// char payload[PAYLOAD_SIZE];
-// char signature[SIGNATURE_SIZE];
-// char out[OUTPUT_SIZE];
-// char key[] = "6equj5";
-
-// CustomJWT jwt(
-//     key,
-//     header, sizeof(header),
-//     payload, sizeof(payload),
-//     signature, sizeof(signature),
-//     out, sizeof(out));
-
-// void WebServer::lockController_GET(AsyncWebServerRequest *request)
-// {
-// #if _PROD_MODE_
-//     if (!isConnectedToInternet())
-//     {
-//         request->send(403, "text/plain", "Unable to connect. Please contact the admin to configure the system's network settings.");
-//         return;
-//     }
-
-//     if (!firebase.isOrganizationAuthorized())
-//     {
-//         lockAllLockers();
-//         request->send(403, "text/plain", "Locker access is restricted. Contact CUSIT Makerspace R&D Lab for details.");
-//         return;
-//     }
-// #endif
-
-//     String email;
-//     String token = request->header("X-Authorization");
-//     Serial.println(token);
-//     int result = jwt.decodeJWT(const_cast<char *>(token.c_str()));
-//     switch (result)
-//     {
-//     case 0:
-//     {
-//         String decodedToken = String(jwt.payload);
-//         String substring = decodedToken.substring(10);
-//         substring.replace("\"}", "");
-//         email = substring;
-//         Serial.println(email);
-//     }
-//     break;
-
-//     case 2:
-//     {
-//         Serial.println("Invalid JWT Code - Err Code: 2");
-//         request->send(401, "text/plain", "Unauthorized!");
-//         return;
-//     }
-//     break;
-
-//     case 3:
-//     {
-//         Serial.println("Invalid JWT Signature - Err Code: 3");
-//         request->send(401, "text/plain", "Unauthorized!");
-//         return;
-//     }
-//     break;
-
-//     default:
-//         Serial.println("Memory Not Allocated - Err Code: 1");
-//         return;
-//     }
-
-//     for (const auto &user : users)
-//     {
-//         if (email == user.second)
-//         {
-//             int gpio = user.first.toInt();
-//             String email = user.second;
-
-//             bool isNew = webSocket.addClient(gpio, email);
-//             email.clear();
-
-//             if (isNew)
-//             {
-//                 // on successful auth initiate websocket connection from client . . .
-//                 request->send(200, "text/plain", "Locker " + String(user.first) + " has been unlocked!");
-//                 return;
-//             }
-
-//             request->send(409, "text/plain", "Websocket connection is already established!");
-//             return;
-//         }
-//     }
-
-//     email.clear();
-//     request->send(403, "text/plain", "Access Denied. Please contact the admin to gain access.");
-//     return;
-// }
