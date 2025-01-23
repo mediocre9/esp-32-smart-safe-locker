@@ -8,7 +8,8 @@ bool CfgDatabase::write(const String &filename, const Cfg &data)
 
     if (!file)
     {
-        Serial.println("Failed to open " + filename);
+        LOGLN("Failed to open " + filename);
+        file.close();
         return false;
     }
 
@@ -24,12 +25,13 @@ bool CfgDatabase::write(const String &filename, const Cfg &data)
 
 Cfg CfgDatabase::read(const String &filename)
 {
-    std::map<String, String> data;
+    Cfg data;
     File file = LittleFS.open(filename.c_str(), FILE_MODE_READ);
 
     if (!file)
     {
-        Serial.println("Failed to open " + filename);
+        LOGLN("Failed to open " + filename);
+        file.close();
         return data;
     }
 
