@@ -7,6 +7,7 @@
 #include <UUID.h>
 #include <Arduino.h>
 #include <LittleFS.h>
+#include <CustomJWT.h>
 
 // JWT Configurations . . . .
 #define HEADER_SIZE 50
