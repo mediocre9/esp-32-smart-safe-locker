@@ -1,3 +1,4 @@
+
 #ifndef FIREBASE_OPERATIONS_H
 #define FIREBASE_OPERATIONS_H
 
@@ -6,14 +7,13 @@
 class FirebaseOperations
 {
 public:
-    FirebaseOperations()
-        : _isAuthorized(1) {}
-
-    int isAuthorized();
-    void configure();
-    void listen();
+    int isOrganizationAuthorized();
+    bool isAuthenticated();
+    void startAuthentication();
+    void listenForAuthorizationStatus();
 
 private:
+    bool _isAuthenticated;
     int _isAuthorized;
     FirebaseData _data;
     FirebaseAuth _auth;
