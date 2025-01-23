@@ -4,18 +4,33 @@
 #include <Arduino.h>
 #include <map>
 
-// Cloud Configuration . . .
+#define BAUD_RATE 9600
+
+#define _PROD_MODE_ true
+#define _PROD_LOGGING_MODE_ false
+
+#if _PROD_MODE_ && _PROD_LOGGING_MODE_
+#define LOG(val) Serial.print(val)
+#define LOGLN(val) Serial.println(val)
+#elif _PROD_LOGGING_MODE_
+#define LOG(val) Serial.print(val)
+#define LOGLN(val) Serial.println(val)
+#else
+#define LOG(val)
+#define LOGLN(val)
+#endif
+
+// Flags For registering and signing up the esp on firebase cloud . . .
+#define REGISTER_ESP_ON_FIREBASE false
+#define LOGIN_ESP_ON_FIREBASE !REGISTER_ESP_ON_FIREBASE
+
+// Firebase Configuration . . .
 #define FIREBASE_WEB_API_KEY "<your-firebase-web-api-key>"
 #define FIREBASE_RTDB_REFERENCE_URL "<your-firebase-RTDB-reference-url>"
 #define ESP_FIREBASE_AUTH_EMAIL "<your-esp32-email-for-firebase-auth>"
 #define ESP_FIREBASE_AUTH_PWD "<your-esp32-password-for-firebase-auth>"
-#define ORGANIZATION "<your-organization-name>"
 
-// Macro Flags For resgistering and signing the esp on firebase cloud . . .
-#define REGISTER_ESP_ON_FIREBASE false
-#define LOGIN_ESP_ON_FIREBASE !REGISTER_ESP_ON_FIREBASE
-
-// Soft AP Network Configuration (defaults) . . . .
+// Network Configuration (defaults) . . . .
 #define ESP_SSID "<your-esp32-ssid>"
 #define ESP_PWD "<your-esp32-password>"
 
@@ -28,7 +43,6 @@
 #define DEVICE_WIFI_CFG_FILE "/device_wifi.cfg"
 #define LOGIN_CFG_FILE "/login.cfg"
 #define USERS_CFG_FILE "/users.cfg"
-#define BAUD_RATE 9600
 
 // Little FS File System Modes . . .
 #define FILE_MODE_WRITE "w"
@@ -36,10 +50,7 @@
 #define FILE_MODE_WRITE_READ "w+"
 #define FILE_MODE_READ_WRITE "r+"
 
-// For Prod/Dev Evironments. . ...
-#define _PROD_MODE_ true
-
-// relay pins defned and mapped for 12 lockers.. . .
+// relay pins defined and mapped for 12 lockers.. . .
 #define GPIO4 4
 #define GPIO13 13
 #define GPIO18 18
@@ -53,7 +64,7 @@
 #define GPIO32 32
 #define GPIO33 33
 
-const std::map<short, uint8_t> _GPIO_PINS_ = {
+const std::map<short, int> _GPIO_PINS_ = {
     {0, GPIO4},
     {1, GPIO13},
     {2, GPIO18},
@@ -67,5 +78,47 @@ const std::map<short, uint8_t> _GPIO_PINS_ = {
     {10, GPIO32},
     {11, GPIO33},
 };
+
+/**
+ * @brief Defines the organization for the firmware authorization.
+ *
+ * The firmware can be blocked by setting the authorized field to false
+ * in the organization's data on Firebase. This allows control over the
+ * authorization level for security purposes.
+ *
+ * Current General Schema:
+ * <your-firebase-RTDB-reference-url>:
+ *      > organizations
+ *        >>   org-1
+ *              >>>  address: String
+ *              >>>  authorized: Boolean (Defaults to True)
+ *              >>>  deviceId: String
+ *              >>>  contact: Number | String
+ *        >>   org-2
+ *              >>>  address: String
+ *              >>>  deviceId: String
+ *              >>>  authorized: Boolean (Defaults to True)
+ *              >>>  contact: Number | String
+ */
+#define ORGANIZATION "cusit"
+
+// JWT Configurations . . . .
+#define HEADER_SIZE 50
+#define PAYLOAD_SIZE 256
+#define SIGNATURE_SIZE 50
+#define OUTPUT_SIZE 400
+
+char header[HEADER_SIZE];
+char payload[PAYLOAD_SIZE];
+char signature[SIGNATURE_SIZE];
+char out[OUTPUT_SIZE];
+char key[] = "6equj5";
+
+CustomJWT jwt(
+    key,
+    header, sizeof(header),
+    payload, sizeof(payload),
+    signature, sizeof(signature),
+    out, sizeof(out));
 
 #endif
