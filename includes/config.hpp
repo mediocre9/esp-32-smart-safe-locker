@@ -103,23 +103,4 @@ const std::map<short, int> _GPIO_PINS_ = {
  */
 #define ORGANIZATION "cusit"
 
-// JWT Configurations . . . .
-#define HEADER_SIZE 50
-#define PAYLOAD_SIZE 256
-#define SIGNATURE_SIZE 50
-#define OUTPUT_SIZE 400
-
-char header[HEADER_SIZE];
-char payload[PAYLOAD_SIZE];
-char signature[SIGNATURE_SIZE];
-char out[OUTPUT_SIZE];
-char key[] = "6equj5";
-
-CustomJWT jwt(
-    key,
-    header, sizeof(header),
-    payload, sizeof(payload),
-    signature, sizeof(signature),
-    out, sizeof(out));
-
 #endif
