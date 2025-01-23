@@ -78,7 +78,7 @@
             text-align: center;
         }
 
-        input[type="text"] {
+        input[type="email"] {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -115,11 +115,12 @@
 
 <body>
     <nav>
-        <h1>Smart Lock</h1>
+        <h1>Smart Lock <sub>v0.1.1</sub></h1>
         <ul>
             <li><a href="/device-wifi">Configure Device Wi-Fi</a></li>
             <li><a href="/home-wifi">Connect Home Wi-Fi</a></li>
             <li><a href="/change-password">Change Password</a></li>
+            <li><a style="background-color: rgb(190, 56, 56); color: #f4f4f9;" href="/reboot">Restart Device</a></li>
         </ul>
     </nav>
 
@@ -127,18 +128,18 @@
         <div class="form-container">
             <h2>Add User Email Address</h2>
             <form action="/users" method="post">
-                <input type="text" name="email_1" placeholder="Locker Number 4" class="email-fields">
-                <input type="text" name="email_2" placeholder="Locker Number 13" class="email-fields">
-                <input type="text" name="email_3" placeholder="Locker Number 18" class="email-fields">
-                <input type="text" name="email_4" placeholder="Locker Number 19" class="email-fields">
-                <input type="text" name="email_5" placeholder="Locker Number 21" class="email-fields">
-                <input type="text" name="email_6" placeholder="Locker Number 22" class="email-fields">
-                <input type="text" name="email_7" placeholder="Locker Number 23" class="email-fields">
-                <input type="text" name="email_8" placeholder="Locker Number 25" class="email-fields">
-                <input type="text" name="email_9" placeholder="Locker Number 26" class="email-fields">
-                <input type="text" name="email_10" placeholder="Locker Number 27" class="email-fields">
-                <input type="text" name="email_11" placeholder="Locker Number 32" class="email-fields">
-                <input type="text" name="email_12" placeholder="Locker Number 33" class="email-fields">
+                <input type="email" name="email_1" placeholder="Locker Number 4" class="email-fields">
+                <input type="email" name="email_2" placeholder="Locker Number 13" class="email-fields">
+                <input type="email" name="email_3" placeholder="Locker Number 18" class="email-fields">
+                <input type="email" name="email_4" placeholder="Locker Number 19" class="email-fields">
+                <input type="email" name="email_5" placeholder="Locker Number 21" class="email-fields">
+                <input type="email" name="email_6" placeholder="Locker Number 22" class="email-fields">
+                <input type="email" name="email_7" placeholder="Locker Number 23" class="email-fields">
+                <input type="email" name="email_8" placeholder="Locker Number 25" class="email-fields">
+                <input type="email" name="email_9" placeholder="Locker Number 26" class="email-fields">
+                <input type="email" name="email_10" placeholder="Locker Number 27" class="email-fields">
+                <input type="email" name="email_11" placeholder="Locker Number 32" class="email-fields">
+                <input type="email" name="email_12" placeholder="Locker Number 33" class="email-fields">
                 <br><br>
                 <input id="save-btn" type="submit" value="Save & Reboot">
             </form>

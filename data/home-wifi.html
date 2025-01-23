@@ -7,36 +7,38 @@
     <title>Smart Lock</title>
     <style>
         body {
-            font-family: "Arial", sans-serif;
-            text-align: center;
-            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background: #f4f4f9;
             color: #333;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            text-align: center;
+        }
+
+        nav,
+        footer {
+            background: #fff;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         nav {
-            background-color: #fff;
-            color: #333;
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         nav h1 {
             font-size: 1.5em;
             margin: 0;
-            padding: 0;
         }
 
         nav ul {
-            list-style-type: none;
-            margin: 0;
+            list-style: none;
             padding: 0;
             display: flex;
         }
@@ -49,25 +51,22 @@
             margin-right: 0;
         }
 
-        nav ul li a {
+        nav a {
             text-decoration: none;
             color: #333;
             padding: 8px 12px;
             border-radius: 4px;
-            transition: background-color 0.3s ease;
+            transition: background 0.3s;
         }
 
-        nav ul li a:hover {
+        nav a:hover {
             background-color: #f0f0f5;
         }
 
         header {
-            background-color: #fff;
-            color: #333;
-            padding: 20px 0;
+            padding: 20px;
             text-align: left;
-            padding-left: 70px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: #fff;
         }
 
         header h1 {
@@ -77,14 +76,14 @@
 
         main {
             flex: 1;
-            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .form-container {
-            background-color: #fff;
+            background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -100,76 +99,77 @@
             margin: 8px 0;
             border: 1px solid #ddd;
             border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1em;
         }
 
         input[type="submit"] {
-            background-color: #333;
+            background: #333;
             color: #fff;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-size: 1em;
+            transition: background 0.3s;
         }
 
         input[type="submit"]:hover {
-            background-color: #555;
-        }
-
-        p {
-            margin-bottom: 10px;
+            background: #555;
         }
 
         footer {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
             text-align: center;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            color: #fff;
+            background: #333;
+        }
+
+        .alert {
+            font-size: smaller;
+            text-align: left;
+            border-radius: 5px;
+            padding: 12px;
+            border: 1px solid #FDDA6A;
+            color: #664d03;
+            background: #fff3cd;
         }
     </style>
 </head>
 
 <body>
     <nav>
-        <h1>Smart Lock</h1>
+        <h1>Smart Lock <sub>v0.1.1</sub></h1>
         <ul>
             <li><a href="/users">Add Users</a></li>
             <li><a href="/device-wifi">Configure Device Wi-Fi</a></li>
             <li><a href="/change-password">Change Password</a></li>
+            <li><a href="/reboot" style="background: rgb(190, 56, 56); color: #f4f4f9;">Restart Device</a></li>
         </ul>
     </nav>
 
     <main>
         <div class="form-container">
             <h2>Home WiFi Configuration</h2>
-            <div style="font-size: smaller; text-align: left; border-radius: 5px; padding: 12px; border: 1px solid #FDDA6A; color: #664d03 ; background-color: #fff3cd;">
-                <p>Please make sure you enter the correct <b>SSID</b> and <b>Password</b> of your home WiFi network. Otherwise the users would not be able to unlock the lockers.</p>
+            <div class="alert">
+                <p>Please make sure you enter the correct <b>SSID</b> and <b>Password</b> of your home WiFi network. Otherwise, users will not be able to unlock the lockers.</p>
             </div>
             <form action="/home-wifi" method="post">
-                <input type="text" id="ssid" placeholder="SSID" class="email-fields" name="home_ssid" />
-                <br><br>
-                <input type="password" id="password" placeholder="Password" class="email-fields" name="home_pwd" />
-                <br><br>
+                <input type="text" id="ssid" placeholder="SSID" name="home_ssid" />
+                <input type="password" id="password" placeholder="Password" name="home_pwd" />
                 <input type="submit" id="save-btn" value="Save & Reboot" />
             </form>
         </div>
     </main>
 
     <footer>&copy; CUSIT Makerspace R&D Lab - City University of Science and Information Technology, Peshawar</footer>
+
     <script>
         const ssid = document.getElementById("ssid");
         const password = document.getElementById("password");
         const saveButton = document.getElementById("save-btn");
-        const fields = document.querySelectorAll(".email-fields");
 
         ssid.value = localStorage.getItem("ssid");
         password.value = localStorage.getItem("pwd");
 
-        saveButton.addEventListener("click", (e) => {
+        saveButton.addEventListener("click", () => {
             localStorage.setItem("ssid", ssid.value);
             localStorage.setItem("pwd", password.value);
         });
