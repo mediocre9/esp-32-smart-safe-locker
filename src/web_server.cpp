@@ -7,11 +7,6 @@
 #include <UUID.h>
 #include <Arduino.h>
 #include <LittleFS.h>
-#include <CustomJWT.h>
-#include <Arduino_JSON.h>
-
-#include <ctime>
-#include <string>
 
 AsyncWebServer WebServer::server(80);
 bool WebServer::isInternetConnected = false;

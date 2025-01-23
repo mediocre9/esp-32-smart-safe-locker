@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include <Arduino.h>
+#include <CustomJWT.h>
 #include <map>
 
 #define BAUD_RATE 9600
