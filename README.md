@@ -1,103 +1,93 @@
 # Multi Smart Safe Locker System
 
-A multi smart locker management system powered by ESP32, enabling secure and convenient access control for individuals, organizations, and homeowners. Users can configure and manage their lockers via a web interface, authorize access using email, and unlock lockers through the Smart Link mobile app.
+![GitHub Repo stars](https://img.shields.io/github/stars/mediocre9/esp-32-smart-safe-locker?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/mediocre9/esp-32-smart-safe-locker?style=for-the-badge)
+![Platform](https://img.shields.io/badge/platform-ESP32-blue?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/mediocre9/esp-32-smart-safe-locker?style=for-the-badge)
+
+A multi smart locker management system powered by ESP32, enabling secure and convenient access control for individuals, organizations, and homeowners. Users can configure and manage their lockers via a web interface, authorize access using email, and unlock lockers through the **[Smart Link](https://github.com/mediocre9/smart-link)** mobile app.
 
 ## Table of Contents
 
-1. [Features](#features)
-2. [Technical Features](#technical-features)
+1. [Features](#1-features)
+2. [Technical Features](#2-technical-features)
     - [Core System](#core-system)
-    - [Authentication and Security]()
-    -
-3. [Setup](#setup)
+    - [Authentication and Security](#authentication-and-security)
+    - [Lock Management](#lock-management)
+    - [System Messages](#system-responses)
+3. [Setup](#3-setup)
     - [Firebase Project Setup](#firebase-project-setup)
     - [Firmware Configuration](#firmware-configuration)
     - [Uploading HTML Files](#uploading-html-files)
-4. [Usage](#usage)
-    - [Adding Authorized Users](#adding-authorized-users)
+4. [Usage](#4-usage)
     - [Smart Link Integration](#smart-link-integration)
-    - [Response When Interacting with the System via Smart Link Mobile App](#response-when-interacting-with-the-system-via-smart-link-mobile-app)
-5. [Web Interface Previews](#web-interface-previews)
-6. [Libraries](#libraries)
+5. [Web Interface Previews](#5-admin-panel-web-interface-previews)
+6. [Libraries](#6-libraries)
 
 ## 1. Features
 
--   **Remote Setup and Control**: Manage locker settings through an ESP32-hosted web interface.
--   **Wi-Fi Configuration**: Admins must provide home Wi-Fi SSID and password via the web interface for internet connectivity.
--   **User Authorization**: Grant locker access by adding authorized user emails locally.
--   **Individual Auto-Lock Timers**: 20-second auto-lock intervals for each user.
--   **WebSocket Notifications**: Real-time notifications alert users when their locker is about to lock.
--   **Secure Locking System**: Email-based access for enhanced security.
--   **Firebase Integration for Firmware Blocking**: Firebase is used solely to allow developers to restrict firmware functionality if necessary.
+- 🚀 **Remote Setup and Control**: Manage locker settings through an ESP32-hosted web interface.
+- ⚙️ **Wi-Fi Configuration**: Admins provide home Wi-Fi SSID and password via the web interface.
+- 🔒 **Secure User Authorization**: Grant access by registering authorized email addresses.  
+- 📡 **WebSocket Notifications**: Real-time notifications before locker auto-locks.
+- ☁️ **Firebase Integration for Firmware Blocking**: Integrated with Firebase for developer-level firmware restrictions and real-time monitoring.  
 
 ## 2. Technical Features
 
-### 1. Core System
+### Core System
 
--   **Microcontroller**: ESP32 with Wi-Fi and Bluetooth capabilities.
--   **Cloud Integration**: Firebase Realtime Database is only used for firmware blocking and developer controls.
+- **Microcontroller**: ESP32 with Wi-Fi and Bluetooth capabilities.
+- **Cloud Integration**: Firebase Realtime Database ensures centralized control and firmware management.
 
-### 2. Authentication and Security
+### Authentication and Security
 
--   **Email-Based Authorization**: Users are granted access by the admin through the web interface by adding their Gmail ID, which they use to sign in to the Smart Link app.
--   **Fingerprint Verification**: The fingerprint is used as a guard wall to send the unlock request but is not processed or stored.
+- **Email-Based Access Control**: Only pre-authorized Gmail IDs can access the locker.
 
-### 3. Lock Management
+### Lock Management
 
--   **Individual Timers**: Each user's locker has a separate auto-lock timeout of 20 seconds.
--   **WebSocket Updates**: Users are notified in real-time when their locker is about to lock.
+- **Individualized Auto-Lock Timers**: Each user’s locker re-locks after a 20-second countdown.
+- **WebSocket Notifications**: Real-time updates ensure users are informed before the locker locks.
 
-### 4. Web Interface
+### Web Interface
 
--   **Hosted by ESP32**: Provides a web UI for system setup and management.
--   **Customizable Settings**: Modify Wi-Fi credentials, user authorizations, and system parameters.
+- **ESP32-Hosted Web UI**: Configure network settings, authorized users, and system preferences effortlessly.
+- **Real-Time Control**: Modify Wi-Fi credentials, manage user access, and monitor system status.
 
-### 5. System Messages
+### System Responses
 
--   If the system is not connected to the internet, end users will receive:
-    `Unable to connect. Please contact the admin to configure the system's network settings.`
-
--   If the end user has not been granted access, they will receive:
-    `Access Denied. Please contact the admin to gain access.`
-
--   If developers have blocked the firmware (which even admins cannot override), users interacting with the system will see:
-    `Locker access is restricted. Contact Developers for further details.`
+- **Access Denied**: `Access Denied. Please contact the admin to gain access.`
+- **Firmware Restrictions**: `Locker access is restricted. Contact Developers for further details.`
+- **Network Connection Issues**: `Unable to connect. Please contact the admin to configure the system's network settings.`
 
 ## 3. Setup
 
 ### Firebase Project Setup
 
-1. Create a Firebase project and obtain **Firebase Web API Key**
-
-and **Realtime Database (RTDB) URL**.
-
+1. Create a Firebase project and obtain **Firebase Web API Key** and **Realtime Database (RTDB) URL**.
 2. Add these to the [config.hpp](https://github.com/mediocre9/esp-32-smart-safe-locker/blob/main/includes/config.hpp) file:
 
 ```cpp
-#define  FIREBASE_WEB_API_KEY  "Your Firebase API Key"
-#define  FIREBASE_RTDB_REFERENCE_URL  "Your Firebase RTDB URL"
+#define FIREBASE_WEB_API_KEY "Your Firebase API Key"
+#define FIREBASE_RTDB_REFERENCE_URL "Your Firebase RTDB URL"
 ```
 
 ### Firmware Configuration
 
-Set `REGISTER_ESP_ON_FIREBASE` to true in [config.hpp](https://github.com/mediocre9/esp-32-smart-safe-locker/blob/main/includes/config.hpp) for initial device registration. Compile and upload the firmware to the ESP32.
-After registration, set `REGISTER_ESP_ON_FIREBASE` back to `false` to enable login mode.
+Set `REGISTER_ESP_ON_FIREBASE` to `true` in [config.hpp](https://github.com/mediocre9/esp-32-smart-safe-locker/blob/main/includes/config.hpp) for initial device registration. Compile and upload the firmware to the ESP32. After registration, set `REGISTER_ESP_ON_FIREBASE` back to `false`.
 
 ### Uploading HTML Files
 
-1. Install the `arduino-littlefs-upload plugin`.
+1. Install the [arduino-littlefs-upload](https://github.com/earlephilhower/arduino-littlefs-upload) plugin.
 2. Place the web interface HTML files in the **data** directory.
 3. Use the plugin to upload these files to the ESP32's LittleFS.
 
 ## 4. Usage
 
-1. Connect to the ESP32 Hotspot
-2. Access the web interface at `http://192.168.4.1`
+1. Connect to the ESP32 Hotspot.
+2. Access the web interface at `http://192.168.4.1`.
 3. Log in and configure the system.
 4. Enter Wi-Fi credentials.
 5. Add authorized users' emails.
-
-Admins grant locker access by adding users' Gmail IDs through the web interface. The Gmail ID must match the one users use to sign in to the [Smart Link](https://github.com/mediocre9/smart-link) app.
 
 ### Smart Link Integration
 
@@ -105,49 +95,20 @@ Admins grant locker access by adding users' Gmail IDs through the web interface.
 2. Sign in with a Google account.
 3. Admins must add the same Google account email to the ESP32 for authorization.
 
-Users must authenticate with a fingerprint before sending an unlock request. Note that the fingerprint verification serves only as a guard wall and is not processed or stored.
+_Users must authenticate with a fingerprint before sending an unlock request. The fingerprint verification serves only as a guard wall and is not processed or stored._
 
-### <ins> Note </ins>:
+## 5. Admin Panel Web Interface Previews
 
--   The firmware requires internet connectivity to function. Admins must provide home wifi `SSID` and `password` via the web interface to connect the system to the internet.
+<img src="previews/1.png" width="60%">
+<img src="previews/2.png" width="60%">
+<img src="previews/3.png" width="60%">
+<img src="previews/4.png" width="60%">
+<img src="previews/5.png" width="60%">
 
--   If incorrect wifi credentials are provided, users will not be able to access the lockers, and the system will display the message:
-    `Unable to connect. Please contact the admin to configure the system's network settings.`
-
--   Firebase is solely used to give developers control over the firmware, such as disabling functionality if necessary.
-
-### Response When Interacting with the System via Smart Link Mobile App
-
-When users attempt to interact with the Smart Safe Locker System through the [Smart Link](https://github.com/mediocre9/smart-link) mobile app, the following responses may occur based on the system’s status:
-
-#### 1. Access Denied:
-
-If a user has not been authorized by the admin, they will receive:
-`Access Denied. Please contact the admin to gain access.`
-
-#### 2. Firmware Restrictions:
-
-If the firmware has been blocked by developers, users will see the message:
-`Locker access is restricted. Contact Developers for further details.`
-
-#### 3. Network Connection Issues:
-
-If the system is not connected to the internet, users will receive:
-`Unable to connect. Please contact the admin to configure the system's network settings.`
-
-## 5. Web Interface Previews
-
-<img  src="previews/1.png"  width="80%">
-<img  src="previews/2.png"  width="80%">
-<img  src="previews/3.png"  width="80%">
-<img  src="previews/4.png"  width="80%">
-<img  src="previews/5.png"  width="80%">
-
-## 6. Libraries:
-
--   LittleFS
--   [Firebase_ESP_Client](https://github.com/mobizt/Firebase-ESP-Client)
--   [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
--   [UUID](https://github.com/RobTillaart/UUID)
--   [arduino-littlefs-upload](https://github.com/earlephilhower/arduino-littlefs-upload)
--   [CustomJWT](https://github.com/Ant2000/CustomJWT)
+## 6. Libraries
+- LittleFS
+- [Firebase_ESP_Client](https://github.com/mobizt/Firebase-ESP-Client)
+- [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
+- [UUID](https://github.com/RobTillaart/UUID)
+- [arduino-littlefs-upload](https://github.com/earlephilhower/arduino-littlefs-upload)
+- [CustomJWT](https://github.com/Ant2000/CustomJWT)
