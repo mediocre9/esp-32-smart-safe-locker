@@ -15,14 +15,16 @@
 1. [Features](#1-features)
 2. [System Responses](#2-system-responses)
 3. [System Flow](#3-system-flow)
-4. [Setup](#4-setup)
+   - [System Web Interface Flow](#system-web-interface-flow)
+   - [Smart Link and Firmware System Flow](#smart-link-and-firmware-system-flow)
+5. [Setup](#4-setup)
    - [Firebase Project Setup](#firebase-project-setup)
    - [Firmware Configuration](#firmware-configuration)
    - [Uploading HTML Files](#uploading-html-files)
-5. [Usage](#5-usage)
+6. [Usage](#5-usage)
    - [Smart Link Integration](#smart-link-integration)
-6. [Admin Panel Web Interface Previews](#6-admin-panel-web-interface-previews)
-7. [Libraries](#7-libraries)
+7. [Admin Panel Web Interface Previews](#6-admin-panel-web-interface-previews)
+8. [Libraries](#7-libraries)
 
 
 
@@ -60,7 +62,7 @@
 
 ## 3. System Flow
 
-### System Web Interface Flow:
+### System Web Interface Flow
 ```mermaid
 graph TD
     A[Access Web Interface: 192.168.4.1] --> B[Login Page]
@@ -102,46 +104,70 @@ graph TD
 ```
 ---
 
-### Smart Link and Firmware System Flow:
+### Smart Link and Firmware System Flow
 ```mermaid
-graph TD
+flowchart TD
+    %% Level 1 – Authentication
     A[Smart Link App] --> B[Fingerprint Authentication Screen]
     B --> C{Fingerprint Authentication Succeeds?}
-    C -->|Yes| D[Request Sent to Firmware Local Server & WebSocket]
-    C -->|No| N[Show: Locked Out Due to Too Many Attempts. Please Try Again Later.]
+    C -- Yes --> D[Request Sent to Firmware Local Server & WebSocket]
+    C -- No --> N[Show: Locked Out Due to Too Many Attempts. Please Try Again Later.]
     N --> B
-    D --> O{Is Firmware Connected to Internet?}
-    O -->|Yes| E[Check User Authorization in Firmware]
-    O -->|No| X[Show: Unable to Connect. Please Contact the Admin to Configure the System's Network Settings.]
-    X --> B
-    E -->|Authorized| F[Check Firebase Authorization for Firmware]
-    E -->|Not Authorized| G[Show Access Denied]
-    G --> B
-    F --> H{Is Firmware Authorized to Function?}
-    H -->|Yes| I[Allow Locker Unlock]
-    H -->|No| J[Show: Locker access is restricted. Contact Developers for further details.]
-    J --> B
-    I --> K[Start Timer for User]
-    K --> L[Locker Countdown 20s for User]
-    L --> M[Locker Auto-Locks or User Locks Locker]
-    M --> B
 
+    %% Level 2 – Connectivity Check
+    D --> O{Is Firmware Connected to Internet?}
+    O -- No --> X[Show: Unable to Connect. Please Contact the Admin to Configure the System's Network Settings.]
+    X --> B
+    O -- Yes --> F[Check Firebase Authorization for Firmware]
+
+    %% Level 3 – Firebase Authorization
+    F -- Not Authorized --> G[Show: Locker Access is Restricted. Contact Developers for Further Details.]
+    G --> B
+    F -- Authorized --> H[Verify JWT Signature in Request]
+
+    %% Level 4 – JWT Verification
+    H --> I{Is JWT Valid?}
+    I -- Yes --> J[Check User Authorization in Firmware]
+    I -- No --> K{Is error due to JWT Signature Issue?}
+    K -- Yes --> M[Show: Unauthorized! - Code 3]
+    K -- No --> L[Show: Unauthorized! - Code 2]
+    M --> B
+    L --> B
+
+    %% Level 5 – User Authorization
+    J --> Q{User Authorized?}
+    Q -- Yes --> R[Unlock Locker]
+    Q -- No --> Y[Show: Access Denied]
+    Y --> B
+
+    %% Level 6 – Locker Operation
+    R --> S[Start Timer for User]
+    S --> T[Locker Countdown 20s for User]
+    T --> U[Locker Auto-Locks or User Locks Locker]
+    U --> B
+
+    %% Styling
     style A fill:#ffffff,stroke:#000000,stroke-width:2px,color:#000000
     style B fill:#f0f0f0,stroke:#000000,stroke-width:2px,color:#000000
     style C fill:#d9d9d9,stroke:#000000,stroke-width:2px,color:#000000
     style D fill:#e6e6e6,stroke:#000000,stroke-width:2px,color:#000000
-    style E fill:#f2f2f2,stroke:#000000,stroke-width:2px,color:#000000
-    style F fill:#f9f9f9,stroke:#000000,stroke-width:2px,color:#000000
-    style G fill:#ffcccc,stroke:#000000,stroke-width:2px,color:#000000
-    style H fill:#cccccc,stroke:#000000,stroke-width:2px,color:#000000
-    style I fill:#c1e6c1,stroke:#000000,stroke-width:2px,color:#000000
-    style J fill:#ffcccc,stroke:#000000,stroke-width:2px,color:#000000
-    style K fill:#ffffb3,stroke:#000000,stroke-width:2px,color:#000000
-    style L fill:#ffeb99,stroke:#000000,stroke-width:2px,color:#000000
-    style M fill:#d1f2ff,stroke:#000000,stroke-width:2px,color:#000000
     style N fill:#ff6666,stroke:#000000,stroke-width:2px,color:#000000
     style O fill:#ffcc99,stroke:#000000,stroke-width:2px,color:#000000
     style X fill:#ff9999,stroke:#000000,stroke-width:2px,color:#000000
+    style F fill:#f9f9f9,stroke:#000000,stroke-width:2px,color:#000000
+    style G fill:#ffcccc,stroke:#000000,stroke-width:2px,color:#000000
+    style H fill:#f2f2f2,stroke:#000000,stroke-width:2px,color:#000000
+    style I fill:#cccccc,stroke:#000000,stroke-width:2px,color:#000000
+    style K fill:#ffcc99,stroke:#000000,stroke-width:2px,color:#000000
+    style M fill:#ffcccc,stroke:#000000,stroke-width:2px,color:#000000
+    style L fill:#ffcccc,stroke:#000000,stroke-width:2px,color:#000000
+    style J fill:#f2f2f2,stroke:#000000,stroke-width:2px,color:#000000
+    style Q fill:#cccccc,stroke:#000000,stroke-width:2px,color:#000000
+    style Y fill:#ffcccc,stroke:#000000,stroke-width:2px,color:#000000
+    style R fill:#c1e6c1,stroke:#000000,stroke-width:2px,color:#000000
+    style S fill:#ffffb3,stroke:#000000,stroke-width:2px,color:#000000
+    style T fill:#ffeb99,stroke:#000000,stroke-width:2px,color:#000000
+    style U fill:#d1f2ff,stroke:#000000,stroke-width:2px,color:#000000
 
 ```
 ---
