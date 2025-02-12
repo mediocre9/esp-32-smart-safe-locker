@@ -31,7 +31,6 @@ public:
 
 private:
     ClientManager _clients;
-    CfgDatabase _database;
     AsyncWebSocket _webSocket;
     String _userEmail;
     int _gpio;
