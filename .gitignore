@@ -1,1 +1,4 @@
 /build
+/includes/secret.hpp
+/backend
+/.vscode
