@@ -7,9 +7,9 @@
 
 #include "Config.hpp"
 
-class SessionIdGenerator final {
+class CookieIdGenerator final {
 public:
-    SessionIdGenerator() = default;
+    CookieIdGenerator() = default;
 
     const String& getId() const {
         return _id;
@@ -27,11 +27,11 @@ private:
     String _id;
 };
 
-class AsyncSessionAuthMiddleware final : public AsyncMiddleware {
+class AsyncCookieAuthMiddleware final : public AsyncMiddleware {
 public:
-    AsyncSessionAuthMiddleware() = delete;
+    AsyncCookieAuthMiddleware() = delete;
 
-    explicit AsyncSessionAuthMiddleware(const SessionIdGenerator& auth)
+    explicit AsyncCookieAuthMiddleware(const CookieIdGenerator& auth)
         : _auth(auth) {}
 
     void run(AsyncWebServerRequest* request, ArMiddlewareNext next) {
@@ -62,7 +62,7 @@ private:
     }
 
 private:
-    SessionIdGenerator _auth;
+    CookieIdGenerator _auth;
 };
 
 #endif
