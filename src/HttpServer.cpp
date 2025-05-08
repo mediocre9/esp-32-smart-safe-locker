@@ -2,7 +2,7 @@
 #include <UUID.h>
 #include <functional>
 
-#include "../includes/AsyncSessionAuthMiddleware.hpp"
+#include "../includes/AsyncCookieAuthMiddleware.hpp"
 #include "../includes/Config.hpp"
 #include "../includes/CustomAsyncRateLimitMiddleware.hpp"
 #include "../includes/Database.hpp"
@@ -17,9 +17,9 @@ AsyncWebServer HttpServer::server(80);
 FirebaseOperations HttpServer::firebase;
 TaskHandle_t firebaseTask = nullptr;
 
-SessionIdGenerator session;
+CookieIdGenerator cookie;
 static WiFiNetworkManager network;
-static AsyncSessionAuthMiddleware authMiddleware(session);
+static AsyncCookieAuthMiddleware authMiddleware(cookie);
 static CustomAsyncRateLimitMiddleware rateLimitMiddleware;
 
 inline void closeLockers() {
@@ -128,6 +128,7 @@ void HttpServer::setupRoutes() {
         std::make_tuple("/api/locks/unlock", HTTP_GET, unlockHandler_GET, &rateLimitMiddleware),
         std::make_tuple("/api/health", HTTP_GET, healthEndpointHandler_GET, &rateLimitMiddleware),
         std::make_tuple("/api/device/reboot", HTTP_GET, rebootEndpointHandler_GET, &rateLimitMiddleware)};
+
     for (const auto& [uri, method, handler, middleware] : routes) {
         server
             .on(uri, method, handler)
@@ -201,10 +202,10 @@ void HttpServer::loginHandler_POST(AsyncWebServerRequest* request) {
 
     if ((usernameArgument == ESP_ADMIN_WEB_AUTH_USERNAME) && (currentPassword == passwordArgument)) {
         AsyncWebServerResponse* response = request->beginResponse(StatusCode::FOUND, ContentType::PLAIN, ResponseMessage::EMPTY_BODY);
-        session.generate();
+        cookie.generate();
         response->addHeader("Location", "/home-wifi");
         response->addHeader("Cache-Control", "no-cache");
-        response->addHeader("Set-Cookie", "SESSION_ID=" + session.getId() + "; Path=/; HttpOnly; Max-Age=600");  // 600 secs = 10mins
+        response->addHeader("Set-Cookie", "COOKIE_ID=" + cookie.getId() + "; Path=/; HttpOnly; Max-Age=600");  // 600 secs = 10mins
         request->send(response);
         return;
     }
@@ -433,6 +434,7 @@ void HttpServer::healthEndpointHandler_GET(AsyncWebServerRequest* request) {
     unsigned long uptimeDays = uptimeHours / 24;
 
     String log =
+        "Build Version: " + String(FIRMWARE_VERSION) + "\n" +
         "RSSI: " + String(WiFi.RSSI()) + "\n" +
         "Uptime: " + String(uptimeDays) + "d " + String(uptimeHours % 24) + "h " + String(uptimeMinutes % 60) + "m " + String(uptimeSeconds % 60) + "s\n" +
         "Wifi Status: " + String(WiFi.status() == WL_CONNECTED ? "Connected" : "Disconnected") + "\n" +
