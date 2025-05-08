@@ -1,19 +1,21 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <Arduino.h>
-#include <CustomJWT.h>
-#include <map>
+#include <WString.h>
+#include <array>
+#include "./Secret.hpp"
 
+// Serial Communication
 #define BAUD_RATE 9600
+#define FIRMWARE_VERSION "0.2.0"
 
-#define _PROD_MODE_ true
-#define _PROD_LOGGING_MODE_ false
+// Prod/Dev Mode Flags
+#define PROD_MODE false
+#define DEV_MODE !(PROD_MODE)
+#define ENABLE_LOGGING !(PROD_MODE)
+#define EXPERIMENTAL_FEATURE false
 
-#if _PROD_MODE_ && _PROD_LOGGING_MODE_
-#define LOG(val) Serial.print(val)
-#define LOGLN(val) Serial.println(val)
-#elif _PROD_LOGGING_MODE_
+#if ENABLE_LOGGING
 #define LOG(val) Serial.print(val)
 #define LOGLN(val) Serial.println(val)
 #else
@@ -21,37 +23,30 @@
 #define LOGLN(val)
 #endif
 
-// Flags For registering and signing up the esp on firebase cloud . . .
-#define REGISTER_ESP_ON_FIREBASE false
-#define LOGIN_ESP_ON_FIREBASE !REGISTER_ESP_ON_FIREBASE
+// Flags for Registering and Signing up the ESP on Firebase Cloud
+#define LOGIN_ESP_ON_FIREBASE true
+#define REGISTER_ESP_ON_FIREBASE !(LOGIN_ESP_ON_FIREBASE)
 
-// Firebase Configuration . . .
-#define FIREBASE_WEB_API_KEY "<your-firebase-web-api-key>"
-#define FIREBASE_RTDB_REFERENCE_URL "<your-firebase-RTDB-reference-url>"
-#define ESP_FIREBASE_AUTH_EMAIL "<your-esp32-email-for-firebase-auth>"
-#define ESP_FIREBASE_AUTH_PWD "<your-esp32-password-for-firebase-auth>"
+#define FIREBASE_WEB_API_KEY (WEB_API_KEY_SECRET)
+#define FIREBASE_RTDB_REFERENCE_URL (REFERENCE_URL_SECRET)
+
+#if DEV_MODE
+#define ESP_FIREBASE_AUTH_EMAIL (AUTH_DEV_EMAIL_SECRET)
+#define ESP_FIREBASE_AUTH_PWD (AUTH_DEV_PASSWORD_SECRET)
+#else
+#define ESP_FIREBASE_AUTH_EMAIL (AUTH_PROD_EMAIL_SECRET)
+#define ESP_FIREBASE_AUTH_PWD (AUTH_PROD_PASSWORD_SECRET)
+#endif
 
 // Network Configuration (defaults) . . . .
-#define ESP_SSID "<your-esp32-ssid>"
-#define ESP_PWD "<your-esp32-password>"
+#define ESP_DEFAULT_SSID (AP_SSID_SECRET)
+#define ESP_DEFAULT_PWD (AP_PASSWORD_SECRET)
 
-// For local web interface auth (defaults). . .
-#define ESP_LOCAL_WEB_AUTH_USERNAME "<set-username-here>"
-#define ESP_LOCAL_WEB_AUTH_PWD "<set-password-here>"
+// Local Web Interface Authentication (Defaults)
+#define ESP_ADMIN_WEB_AUTH_USERNAME (LOGIN_USER_SECRET)
+#define ESP_ADMIN_WEB_AUTH_PWD (LOGIN_PASSWORD_SECRET)
 
-// Configuration Files . . ...
-#define HOME_WIFI_CFG_FILE "/home_wifi.cfg"
-#define DEVICE_WIFI_CFG_FILE "/device_wifi.cfg"
-#define LOGIN_CFG_FILE "/login.cfg"
-#define USERS_CFG_FILE "/users.cfg"
-
-// Little FS File System Modes . . .
-#define FILE_MODE_WRITE "w"
-#define FILE_MODE_READ "r"
-#define FILE_MODE_WRITE_READ "w+"
-#define FILE_MODE_READ_WRITE "r+"
-
-// relay pins defined and mapped for 12 lockers.. . .
+// for 12 Lockers...
 #define GPIO4 4
 #define GPIO13 13
 #define GPIO18 18
@@ -65,19 +60,77 @@
 #define GPIO32 32
 #define GPIO33 33
 
-const std::map<short, int> _GPIO_PINS_ = {
-    {0, GPIO4},
-    {1, GPIO13},
-    {2, GPIO18},
-    {3, GPIO19},
-    {4, GPIO21},
-    {5, GPIO22},
-    {6, GPIO23},
-    {7, GPIO25},
-    {8, GPIO26},
-    {9, GPIO27},
-    {10, GPIO32},
-    {11, GPIO33},
+const std::array<uint16_t, 12> GPIOS = {
+    GPIO4, GPIO13, GPIO18,
+    GPIO19, GPIO21, GPIO22,
+    GPIO23, GPIO25, GPIO26,
+    GPIO27, GPIO32, GPIO33};
+
+enum StatusCode {
+    OK_CODE = 200,
+    FOUND = 302,
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    FORBIDDEN = 403,
+    NOT_FOUND = 404,
+    CONFLICT = 409,
+    TOO_MANY_REQUESTS = 429,
+    INTERNAL_SERVER_ERROR = 500,
+};
+
+// LittleFS File System Modes...
+struct LittleFSFileMode {
+    static inline constexpr const char* WRITE = "w";
+    static inline constexpr const char* READ = "r";
+    static inline constexpr const char* WRITE_READ = "w+";
+    static inline constexpr const char* READ_WRITE = "r+";
+};
+
+// Configuration Files path...
+struct CfgFilePath {
+    static inline constexpr const char* LOGIN = "/login.cfg";
+    static inline constexpr const char* USERS = "/users.cfg";
+    static inline constexpr const char* HOME = "/home_wifi.cfg";
+    static inline constexpr const char* DEVICE = "/device_wifi.cfg";
+};
+
+// Endpoint protection Static API-Keys....
+struct AuthKeys {
+    static inline constexpr const char* ADMIN = ADMIN_API_KEY_SECRET;
+    static inline constexpr const char* CLIENT = CLIENT_API_KEY_SECRET;
+};
+
+struct RouteFilePath {
+    static inline constexpr const char* INDEX = "/index.html";
+    static inline constexpr const char* USERS = "/users.html";
+    static inline constexpr const char* HOME_WIFI = "/home-wifi.html";
+    static inline constexpr const char* CHANGE_PASSWORD = "/change-password.html";
+    static inline constexpr const char* DEVICE_WIFI = "/device-wifi.html";
+    static inline constexpr const char* RESTART = "/restart.html";
+    static inline constexpr const char* NOT_FOUND = "/404.html";
+};
+
+struct ContentType {
+    static inline constexpr const char* PLAIN = "text/plain";
+    static inline constexpr const char* HTML = "text/html";
+};
+
+struct ResponseMessage {
+    static inline constexpr const char* EMPTY_BODY = "";
+    static inline constexpr const char* NETWORK_CONFIGURTION_REQUIRED = "Unable to connect. Please contact the admin to configure the system's network settings.";
+    static inline constexpr const char* LOCKER_ACCESS_RESTRICTED = "Locker access is restricted. Contact Developers for further details.";
+    static inline constexpr const char* UNAUTHORIZED_LOCKER_ACCESS = "Access Denied. Please contact the admin to gain access.";
+    static inline constexpr const char* WEBSOCKET_CONNECTION_EXISTS = "Websocket connection is already established!";
+    static inline constexpr const char* INVALID_API_KEY = "Invalid API-Key.";
+    static inline constexpr const char* API_KEY_NOT_FOUND = "API-Key was not provided!";
+    static inline constexpr const char* ALLOWED_CONTENT_TYPE = "Allowed Content-Type is text/plain";
+    static inline constexpr const char* INVALID_URI = "Invalid URI!";
+    static inline constexpr const char* EMAIL_QUERY_PARAM_REQUIRED = "email query param is required!";
+    static inline constexpr const char* TOKEN_QUERY_PARAM_REQUIRED = "token query param is required!";
+    static inline constexpr const char* NOT_FOUND = "404! Not Found";
+    static inline constexpr const char* USER_NOT_FOUND = "User not Found";
+    static inline constexpr const char* TOO_MANY_REQUESTS = "Too many requests. Try again Later!";
+    static inline constexpr const char* REBOOT = "Rebooted!";
 };
 
 /**
@@ -102,5 +155,6 @@ const std::map<short, int> _GPIO_PINS_ = {
  *              >>>  contact: Number | String
  */
 #define ORGANIZATION "cusit"
+#define RTDB_PATH "/organizations/" + String(ORGANIZATION) + "/authorized"
 
 #endif

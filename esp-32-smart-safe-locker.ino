@@ -1,62 +1,69 @@
-#include "includes/config.hpp"
-#include "includes/web_server.hpp"
-#include "includes/firebase_operations.hpp"
-#include "includes/web_socket.hpp"
-#include <LittleFS.h>
+#if __cplusplus < 201703L
+#error This project requires a compiler of c++ 17 or above.
+#endif
+
 #include <Arduino.h>
+#include <LittleFS.h>
 
-WebSocket webSocket("/lock-controller");
+#include "includes/Config.hpp"
+#include "includes/HttpServer.hpp"
+#include "includes/NetworkManager.hpp"
+#include "includes/WebSocket.hpp"
 
-inline void initializeLockers()
-{
-  for (const auto &i : _GPIO_PINS_)
-  {
-    pinMode(i.second, OUTPUT);
-    digitalWrite(i.second, HIGH);
-  }
-}
+#if EXPERIMENTAL_FEATURE
+WebSocket webSocket("/locks");
+#endif
+WiFiNetworkManager network;
 
-void setup()
-{
-  WebServer webServer;
+inline void initializeGPIOS();
+void setupServers();
 
-  Serial.begin(BAUD_RATE);
-  initializeLockers();
+void setup() {
+    Serial.begin(BAUD_RATE);
+    initializeGPIOS();
 
-  if (!LittleFS.begin())
-  {
-    LOGLN("LittleFS Failed!");
-    LOGLN("Restarting . . . ");
-    ESP.restart();
-    return;
-  }
-
-  // The order of the below 3 methods
-  // should not be changed.
-  // Otherwise the code will throw
-  // runtime errors . . .
-  // because the STA and AP modes were used in
-  // [setupDeviceNetworkModes] method
-  // and these modes should be setup before starting the server...
-  //
-  // https://github.com/espressif/arduino-esp32/issues/8661#issuecomment-1731752332
-  webServer.setupDeviceNetworkModes();
-  webServer.start();
-  webServer.setupRoutes();
-
-  if (webServer.isConnectedToInternet())
-  {
-    webServer.firebase.startAuthentication();
-    if (webServer.firebase.isAuthenticated())
-    {
-      webSocket.init();
-      webServer.server.addHandler(&(webSocket.getWebSocketInstance()));
-      webServer.firebase.listenForAuthorizationStatus();
+    if (!LittleFS.begin()) {
+        LOGLN("LittleFS Failed!");
+        LOGLN("Restarting . . . ");
+        ESP.restart();
+        return;
     }
-  }
+
+    setupServers();
 }
 
-void loop()
-{
-  webSocket.getWebSocketInstance().cleanupClients();
+void loop() {
+#if EXPERIMENTAL_FEATURE
+    if (network.isConnectedToInternet() && HttpServer::firebase.isAuthenticated()) {
+        webSocket.getWebSocketInstance().cleanupClients();
+    }
+#endif
+}
+
+inline void initializeGPIOS() {
+    for (uint16_t pinNo : GPIOS) {
+        pinMode(pinNo, OUTPUT);
+        digitalWrite(pinNo, HIGH);
+    }
+}
+
+void setupServers() {
+    network.setupNetworks();
+    HttpServer::start();
+    HttpServer::setupRoutes();
+
+    if (!network.isConnectedToInternet()) {
+        return;
+    }
+
+    HttpServer::firebase.authenticate();
+    if (!HttpServer::firebase.isAuthenticated()) {
+        return;
+    }
+
+#if EXPERIMENTAL_FEATURE
+    webSocket.init();
+    HttpServer::server.addHandler(&(webSocket.getWebSocketInstance()));
+#endif
+    HttpServer::firebase.listenForAuthorizationStatus();
 }
