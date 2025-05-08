@@ -13,6 +13,7 @@ class Database {
 public:
     [[nodiscard]] virtual bool write(const String& filename, const T& data) = 0;
     [[nodiscard]] virtual T read(const String& filename) = 0;
+    virtual ~Database() {}
 };
 
 class CfgDatabase final : public Database<Cfg> {
