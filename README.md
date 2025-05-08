@@ -9,7 +9,7 @@
 > An ESP32 smart locker system designed for secure and efficient access management. It provides a web interface for configuration, email-based user authorization, and seamless unlocking via the **[Smart Link](https://github.com/mediocre9/smart-link)** mobile app, making it ideal for individuals, organizations, and homeowners.
 
 > [!WARNING]  
-> Firmware is under **heavy develpoment** — expect breaking changes across modules.  
+> Firmware is under **heavy develpoment** expect breaking changes across modules.  
 > Existing architecture diagrams are outdated and no longer reflect the current system structure.
 
 ## Contents
